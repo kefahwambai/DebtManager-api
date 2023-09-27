@@ -81,7 +81,7 @@ Rails.application.configure do
   config.action_mailer.default_options = { from: 'passwordcontrol@debtmanager.com' }
 
 
-  config.action_controller.default_url_options = { host: 'https://debtmanager.onrender.com/', protocol: 'https' }
+  config.action_controller.default_url_options = { host: 'debtmanager.onrender.com/', protocol: 'https' }
 
 
 
