@@ -43,6 +43,8 @@ gem 'active_model_serializers', '~> 0.10.2'
 
 # gem "jsonapi-serializer", "~> 2.2"
 gem 'responders' 
+gem 'sprockets-rails', group: :assets
+
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
