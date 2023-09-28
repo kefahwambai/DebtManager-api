@@ -19,7 +19,7 @@ Rails.application.configure do
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   config.require_master_key = true
   config.action_dispatch.default_headers = {
-    'Access-Control-Allow-Origin' => 'https://localhost:3001',
+    'Access-Control-Allow-Origin' =>  "https://debtmanager.onrender.com", "http://localhost:3001", "https://localhost:3001", "https://debtmanager.vercel.app/",
     'Access-Control-Allow-Methods' => 'POST, PUT, DELETE, GET, OPTIONS',
     'Access-Control-Allow-Headers' => 'Origin, Content-Type, Accept, Authorization, Token',
     'Access-Control-Request-Method' => %w{GET POST OPTIONS}.join(","),
@@ -47,7 +47,7 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ "http://example.com", /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
