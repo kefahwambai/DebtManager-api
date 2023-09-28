@@ -1,6 +1,6 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "https://debtmanager.onrender.com", "http://localhost:3001", "http://localhost:3001", "https://debtmanager.vercel.app/" 
+    origins "https://debtmanager.onrender.com", "http://localhost:3001", "https://localhost:3001", "https://debtmanager.vercel.app/" 
 
     resource "*",
       headers: :any,
