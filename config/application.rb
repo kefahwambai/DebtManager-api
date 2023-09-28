@@ -35,6 +35,9 @@ module Debtmanager
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     Rails.application.config.session_store :cookie_store, key: 'debt_manager_sess'
+    config.action_mailer.default_url_options = { host: 'debtmanager.vercel.app', protocol: 'https' }
+    config.action_controller.default_url_options = { host: 'debtmanager.onrender.com', protocol: 'https' }
+
 
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
