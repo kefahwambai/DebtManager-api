@@ -77,7 +77,7 @@ Rails.application.configure do
     authentication: 'plain',
     enable_starttls_auto: true
   }
-  config.action_mailer.default_url_options = { host: 'https://debtmanager.vercel.app' }
+  config.action_mailer.default_url_options = { host: 'debtmanager.vercel.app', protocol: 'https' }
   config.action_controller.default_url_options = { host: 'debtmanager.onrender.com', protocol: 'https' }  
 
 
