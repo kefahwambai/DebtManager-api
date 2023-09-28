@@ -4,7 +4,7 @@ class UserMailer < ApplicationMailer
     @reset_token = @user.password_reset_token
 
     # Construct the reset password URL
-    reset_url = "http://localhost:3000/password_resets/#{@reset_token}/edit"
+    reset_url = "https://debtmanager.onrender.com/password_resets/#{@reset_token}/edit"
 
     mail(to: @user.email, subject: 'Password Reset') do |format|
       format.html { render plain: " Hi #{@user.name}, You can reset your password here: #{reset_url}. If you didn't initiate this process kindly ignore this email!" }

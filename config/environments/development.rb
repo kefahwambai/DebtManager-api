@@ -50,8 +50,9 @@ Rails.application.configure do
     authentication: 'plain',
     enable_starttls_auto: true
   }
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000, protocol: 'http' }
-  config.action_mailer.default_options = { from: 'passwordcontrol@debtmanager.com' }
+  config.action_mailer.default_url_options = { host: 'https://debtmanager.vercel.app/' }
+  config.action_controller.default_url_options = { host: 'debtmanager.onrender.com', protocol: 'https' }  
+
 
 
   config.action_mailer.perform_caching = false
