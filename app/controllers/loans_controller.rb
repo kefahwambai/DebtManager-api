@@ -1,6 +1,6 @@
 class LoansController < ApplicationController
   
-  skip_before_action :verify_authenticity_token
+  before_action :authenticate_request!
   before_action :set_loan, only: [:show, :update, :destroy]
   skip_before_action :set_loan, only: [:create]
 

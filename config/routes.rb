@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :feedbacks
   
   resources :password_resets, only: [:create, :edit, :update]
   resources :loans

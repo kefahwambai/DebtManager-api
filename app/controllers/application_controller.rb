@@ -1,54 +1,43 @@
-require "application_responder"
-
 class ApplicationController < ActionController::API
-  self.responder = ApplicationResponder
-  respond_to :html
+  include Response
+   include ExceptionHandler
+   rescue_from ActiveRecord::RecordNotDestroyed, with: :not_destroyed
 
-  include ActionController::RequestForgeryProtection
+   def authenticate_request!
+     return invalid_authentication if !payload || !AuthenticationTokenService.valid_payload(payload.first)
+     current_user!
+     invalid_authentication unless @current_user
+   end
 
-  protect_from_forgery with: :exception
-    
-
-
-  include ActionController::Cookies
-  include ActionController::MimeResponds
-
-  before_action :snake_case_params, :attach_authenticity_token
-
-  def current_user
-    return nil if session[:session_token].nil?
-    @current_user ||= User.find_by(session_token: session[:session_token])
-  end
-  
-
-  def login!(user)
-    session[:session_token] = user.reset_session_token!
-  end
-
-  def logout!
-    current_user.reset_session_token! if current_user
-    session[:session_token] = nil
-    @current_user = nil
-  end
-
-  def require_logged_in
-    unless current_user
-      render json: { message: 'Unauthorized' }, status: :unauthorized 
+  #  def current_user!
+  #    @current_user = User.find_by(id: payload[0]['user_id'])
+  #  end
+    def current_user!
+      user_id = payload[0]['user']['id']
+      Rails.logger.info("User ID from Token: #{user_id}")
+      @current_user = User.find_by(id: user_id)
     end
-  end
-
-  private
-  def snake_case_params
-    params.deep_transform_keys!(&:underscore)
-  end
-
-  def attach_authenticity_token
-    headers['X-CSRF-Token'] = masked_authenticity_token(session)
-  end
   
-  def invalid_authenticity_token
-    render json: { message: 'Invalid authenticity token' }, 
-      status: :unprocessable_entity
-  end
   
+
+   private
+
+   def payload
+    auth_header = request.headers['Authorization']
+    token = auth_header.split(' ').last
+  
+    begin
+      decoded_token = AuthenticationTokenService.decode(token)
+      Rails.logger.info("Decoded Token: #{decoded_token}")
+      decoded_token
+    rescue StandardError => e
+      Rails.logger.error("Token Decoding Error: #{e.message}")
+      nil
+    end
+   end
+  
+
+   def invalid_authentication
+     render json: { error: 'You will need to login first' }, status: :unauthorized
+   end
 end

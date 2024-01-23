@@ -52,6 +52,7 @@ Rails.application.configure do
   }
   config.action_mailer.default_url_options = { host: 'https://debtmanager.vercel.app/' }
   config.action_controller.default_url_options = { host: 'debtmanager.onrender.com', protocol: 'https' }  
+  
 
 
 

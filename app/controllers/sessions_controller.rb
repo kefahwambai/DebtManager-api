@@ -1,39 +1,40 @@
 class SessionsController < ApplicationController
+  # skip_before_action :authorized_user, only: [:create, :delete]
 
-  def show
-    if current_user
-      @user = current_user
-      render json: @user
-    else
-      render json: { user: nil }
-    end
-  end
-   
-
-  def index
-      # set cookie
-    cookies[:hello_world] ||= "Hello User"
-    session[:hello_world] ||= "Hello World"
-    render json: {cookies: cookies.to_hash}
-  end
-  
   def create
-    user = User.find_by(email: params[:email]) 
-    if user
-      if user&.authenticate(params[:password])
-        session[:user_id] = user.id
-        render json: user
-      else
-        render json: { errors: ['Invalid email or password'] }, status: :unprocessable_entity
-      end
+    user = User.find_by(email: params[:email])
+    if user&.authenticate(params[:password])
+      token = AuthenticationTokenService.encode(user.id)
+      render json: { user: UserSerializer.new(user), token: token }
     else
-      render json: { errors: ['User not found'] }, status: :not_found
+      render json: { message: 'Invalid email or password' }, status: :unauthorized
     end
   end
-  
+
   def destroy
-    logout!
-    head :no_content
+    if user
+      render json: {
+        status: 200, message: 'Logged out successfully'
+      }, status: :ok
+    else
+      render json: {
+        status: 401,
+        message: "Couldn't find an active session."
+      }, status: :unauthorized
+    end
+  end
+
+  private
+
+  def user
+    @user ||= User.find_by(email: params[:email]) if params[:email].present?
+  end
+
+  def parameter_missing(error)
+    render json: { error: error.message }, status: :unprocessable_entity
+  end
+
+  def handle_unauthenticated
+    render json: { error: 'Incorrect password ' }, status: :unauthorized
   end
 end
-  

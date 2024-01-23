@@ -1,5 +1,6 @@
 class ClientsController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  before_action :authenticate_request!, except: :create
+ 
 
   # GET /clients
   def index
@@ -8,16 +9,7 @@ class ClientsController < ApplicationController
   end
 
   # GET /clients/1
-  # def show
-  #   @client = Client.includes(:loans).find_by(id: params[:id])
-  
-  #   if @client.nil?
-  #     render json: { error: 'Client not found' }, status: :not_found
-  #     return
-  #   end
-  
-  #   render json: ClientSerializer.new(@client).serializable_hash[:data][:attributes]
-  # end
+
   def show
     @client = Client.find(params[:id])
     render json: @client
@@ -26,7 +18,8 @@ class ClientsController < ApplicationController
 
   # POST /clients
   def create
-    @client = Client.new(client_params)
+
+    @client = current_user!.clients.build(client_params)   
 
     if @client.save
       render json: @client, status: :created, location: @client
@@ -34,6 +27,7 @@ class ClientsController < ApplicationController
       render json: @client.errors, status: :unprocessable_entity
     end
   end
+ 
 
   # PATCH/PUT /clients/1
   def update

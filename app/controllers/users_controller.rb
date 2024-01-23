@@ -1,32 +1,19 @@
 class UsersController < ApplicationController
-  # skip_before_action :authorized_user, only: [:create, :index]
-  # wrap_parameters format: []
-  # rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
-  # rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
+  before_action :set_user, only: %i[show update destroy]
+  # skip_before_action :authorized_user, only: :create
 
   def index
-    @users = User.all
-    render :index
-  end
-
-  def create
-    @user = User.new(user_params)
-    if @user.save
-      login! @user
-      render 'users/show'
-    else
-      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
-    end
+    render json: User.all, status: :ok
   end
 
   def show
-    @user = User.find(params[:id])
+    render json: current_user, status: :ok
+  end    
 
-    if @user
-      render :show
-    else
-      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
-    end
+  def create
+    user = User.create!(user_params)
+    token = AuthenticationTokenService.encode(user.id)
+    render json: { token: token }, status: :created
   end
 
 
@@ -39,17 +26,16 @@ class UsersController < ApplicationController
     end
   end
 
+
   private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_user
+      @user = User.find_by(params[:id])
+    end
+    
 
-  def user_params
-    params.permit(:name, :email, :password, :password_confirmation)
-  end
-
-  def render_not_found_response
-    render json: { errors: 'User not found' }, status: :not_found
-  end
-
-  def render_unprocessable_entity_response(invalid)
-    render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity
-  end
+    # Only allow a list of trusted parameters through.
+    def user_params
+      params.permit(:name, :email, :password, :password_confirmation)
+    end
 end

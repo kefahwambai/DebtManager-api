@@ -3,6 +3,7 @@ class Client < ApplicationRecord
 
     has_many :loans
     has_one_attached :image
+    belongs_to :user
 
     def image_url
         if image.attached?
