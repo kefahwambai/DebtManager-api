@@ -1,6 +1,6 @@
 class ClientSerializer < ActiveModel::Serializer
     
-  attributes :id, :name, :image_url
+  attributes :id, :name
   has_many :loans
   belongs_to :user
   

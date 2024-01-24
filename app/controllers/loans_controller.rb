@@ -6,15 +6,17 @@ class LoansController < ApplicationController
 
   # GET /loans
   # GET /loans
+ 
   def index
-    if params[:clientId].present?
-      @loans = Loan.where(client_id: params[:clientId])
+    if params[:client_id].present?
+      @loans = Loan.where(client_id: params[:client_id])
     else
-      @loans = Loan.all
+      # @loans = Loan.all
     end
 
     render json: @loans
   end
+  
 
 
   # GET /loans/1
